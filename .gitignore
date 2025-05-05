@@ -3,6 +3,8 @@
 
 *.tfplan
 
+*eks-node-key*
+
 .terraform/
 .terraform.lock.hcl
 

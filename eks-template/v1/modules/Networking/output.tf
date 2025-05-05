@@ -13,3 +13,7 @@ output "subnet_priv1a" {
 output "subnet_priv1b" {
   value = aws_subnet.subnets["priv-1a"].id
 }
+
+output "sg-eks-cluster-id" {
+  value = aws_security_group.eks_sg.id
+}

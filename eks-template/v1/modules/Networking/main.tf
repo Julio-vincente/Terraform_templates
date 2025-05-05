@@ -1,9 +1,9 @@
 resource "aws_vpc" "default-vpc" {
   cidr_block           = "172.16.0.0/16"
-  enable_dns_hostnames = false
-  enable_dns_support   = false
+  enable_dns_hostnames = true
+  enable_dns_support   = true
   tags = {
-    Name = "alb-vpc"
+    Name = "eks-vpc"
   }
 }
 
@@ -84,7 +84,43 @@ resource "aws_route_table_association" "ass_priv" {
 }
 
 resource "aws_security_group" "eks_sg" {
-  name        = "ClusterSg"
-  description = "aaaaaaaaaaa"
+  name        = "eks-cluster-sg"
+  description = "Security group for EKS cluster and nodes"
   vpc_id      = aws_vpc.default-vpc.id
+
+  ingress {
+    description = "Allow communication from EKS control plane"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow communication between nodes"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.default-vpc.cidr_block]
+  }
+
+  ingress {
+    description = "Allow communication for worker nodes on HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.default-vpc.cidr_block]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "eks-cluster-sg"
+  }
 }

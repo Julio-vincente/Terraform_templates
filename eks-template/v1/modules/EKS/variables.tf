@@ -21,3 +21,7 @@ variable "k8s_role_arn" {
 variable "node-role-arn" {
   type = string
 }
+
+variable "sg-eks-cluster-id" {
+  type = string
+}

@@ -1,7 +1,7 @@
 ## CLUSTER
 resource "aws_iam_role" "k8s_role" {
   assume_role_policy = jsonencode({
-    Version = ""
+    Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
@@ -61,3 +61,4 @@ resource "aws_iam_role_policy_attachment" "k8s_container_registry_read_only" {
   role       = aws_iam_role.k8s_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
